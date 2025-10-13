@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<!-- Fragmento da navbar -->
+<nav th:fragment="navbar" class="navbar">
+    <div class="nav-container">
+        <a href="/" class="navbar-brand">🚚 PlenoTrip ERP</a>
+        <ul class="main-nav">
+            <!-- Cadastros -->
+            <li>
+                <a href="#">Cadastros ▼</a>
+                <ul class="submenu">
+                    <li>
+                        <a href="#">Veículos ▶</a>
+                        <ul class="sub-submenu">
+                            <li><a href="/veiculo">Listar Veículos</a></li>
+                            <li><a href="/veiculo/novo">Cadastrar Veículo</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Motoristas ▶</a>
+                        <ul class="sub-submenu">
+                            <li><a href="/motorista">Listar Motoristas</a></li>
+                            <li><a href="/motorista/novo">Cadastrar Motorista</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Operacional -->
+            <li>
+                <a href="#">Operacional ▼</a>
+                <ul class="submenu">
+                    <li>
+                        <a href="#">Atribuições de Entrega ▶</a>
+                        <ul class="sub-submenu">
+                            <li><a href="/entrega">Listar Atribuições</a></li>
+                            <li><a href="/entrega/novo">Nova Atribuição</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Financeiro -->
+            <li>
+                <a href="#">Financeiro ▼</a>
+                <ul class="submenu">
+                    <li>
+                        <a href="#">Faturas de Entrega ▶</a>
+                        <ul class="sub-submenu">
+                            <li><a href="nota_fiscal">Listar Notas Fiscais</a></li>
+                            <li><a href="nota_fiscal/novo">Emitir Notas Fiscais</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+package main
+
+import (
+	"api_projeto_plenotrips/auth"
+	"api_projeto_plenotrips/db"
+	"api_projeto_plenotrips/handlers"
+	"api_projeto_plenotrips/services"
+
+	"log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
+)
+
+// @title PlenoTrip ERP Webhook API
+// @version 1.0
+// @description Serviço para notificação de novas atribuições de entrega com validação JWT e transações atômicas.
+// @host localhost:8081
+// @BasePath /v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Token JWT no formato "Bearer {token}"
+
+func main() {
+	// Conexão com PostgreSQL
+	db, err := db.ConnectDB()
+	if err != nil {
+		log.Fatal("Erro ao conectar ao banco: ", err)
+	}
+	defer db.Close()
+	log.Println("✅ Conexão com banco estabelecida com sucesso!")
+
+	// Serviços e handlers
+	assignmentService := services.NewAssignmentService(db)
+	assignmentHandler := handlers.NewAssignmentHandler(assignmentService)
+
+	r := gin.Default()
+
+	api := r.Group("/v1/assignments")
+	api.Use(authMiddleware())
+	{
+		api.POST("/notify", assignmentHandler.Notify)
+	}
+
+	r.Run(":8081")
+}
+
+func authMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader("Authorization")
+		if err := auth.ValidateToken(authHeader); err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error":   "Unauthorized",
+				"message": "Token JWT inválido ou ausente",
+			})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}

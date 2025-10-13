@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veículos - PlenoTrip ERP</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<div class="container">
+	<div th:replace="~{fragmento/navbar}"></div>
+    <div class="header">
+        <h1 style="padding-left:10px;">Veículos</h1>
+        <a href="/veiculo/novo" class="btn">+ Novo Veículo</a>
+    </div>
+
+    <!-- Mensagem de erro -->
+    <div th:if="${mensagemSucesso}" style="background: #d4edda; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 20px;" th:text="${mensagemSucesso}"></div>
+    <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+    <!-- Tabela de veículos -->
+    <table>
+        <thead>
+            <tr>
+                <th>Placa</th>
+                <th>Modelo</th>
+                <th>Status</th>
+                <th>Criado em</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ✅ Correção: verifica se veiculos NÃO é nulo E está vazio -->
+            <tr th:if="${veiculos != null and veiculos.empty}">
+                <td colspan="5" style="text-align: center; color: #6c757d;">Nenhum veículo cadastrado.</td>
+            </tr>
+            <tr th:each="veiculo : ${veiculos}">
+                <td th:text="${veiculo.plateNumber}"></td>
+                <td th:text="${veiculo.model}"></td>
+                <td th:text="${veiculo.status}"></td>
+                <td th:text="${#dates.format(veiculo.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td class="acoes">
+                    <a th:href="@{/veiculo/editar/{id}(id=${veiculo.id})}" class="btn-editar">Editar</a>
+                    <a th:href="@{/veiculo/excluir/{id}(id=${veiculo.id})}"
+                       class="btn-excluir"
+                       onclick="return confirm('Tem certeza que deseja excluir este veículo?')">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Paginação: só mostra se veiculos NÃO for nulo e NÃO estiver vazio -->
+    <div class="paginacao" th:if="${veiculos != null and !veiculos.empty}">
+        <a th:if="${paginaAtual > 1}"
+           th:href="@{/veiculo(pagina=${paginaAtual - 1}, tamanho=${tamanhoPagina})}">← Anterior</a>
+
+        <span th:text="'Página ' + ${paginaAtual}"></span>
+
+        <a th:if="${temProximaPagina}"
+           th:href="@{/veiculo(pagina=${paginaAtual + 1}, tamanho=${tamanhoPagina})}">Próxima →</a>
+    </div>
+</div>
+
+</body>
+</html>

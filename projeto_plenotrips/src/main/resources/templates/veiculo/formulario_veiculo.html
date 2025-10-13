@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${modoEdicao} ? 'Editar Veículo' : 'Cadastrar Veículo'">Veículo</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<div class="container">
+	<div th:replace="~{fragmento/navbar}"></div>
+    <div class="form-card">
+        <h2 th:text="${modoEdicao} ? 'Editar Veículo' : 'Cadastrar Novo Veículo'">Veículo</h2>
+
+        <!-- Mensagem de erro -->
+        <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+        <!-- Formulário -->
+        <form th:object="${veiculo}" 
+              th:action="${modoEdicao} ? @{/veiculo/atualizar} : @{/veiculo}" 
+              method="post">
+
+            <!-- Campo oculto para ID (necessário na edição) -->
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="plateNumber" class="campo-obrigatorio">Placa</label>
+                <input type="text" 
+                       id="plateNumber" 
+                       th:field="*{plateNumber}" 
+                       maxlength="10" 
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label for="model" class="campo-obrigatorio">Modelo</label>
+                <input type="text" 
+                       id="model" 
+                       th:field="*{model}" 
+                       maxlength="100" 
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label for="status" class="campo-obrigatorio">Status</label>
+                <select id="status" th:field="*{status}" required>
+                    <option value="">Selecione o status</option>
+                    <option value="OPERATIONAL">Operacional</option>
+                    <option value="MAINTENANCE">Manutenção</option>
+                    <option value="IN_TRANSIT">Em Trânsito</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">
+                    <span th:text="${modoEdicao} ? 'Atualizar' : 'Cadastrar'">Salvar</span>
+                </button>
+                <a href="/veiculo" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h1 th:text="${tipo == 'motorista' ? 'Selecionar Motorista (Disponível)' : 'Selecionar Veículo (Operacional)'}">Selecionar</h1>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+    <div class="container">
+    	<div th:replace="~{fragmento/navbar}"></div>
+        <div class="voltar">
+            <a href="javascript:history.back()">&larr; Voltar</a>
+        </div>
+
+        <h1 th:text="${tipo == 'motorista' ? 'Selecionar Motorista' : 'Selecionar Veículo'}">Selecionar</h1>
+
+        <div th:if="${mensagemErro}" style="color: red; margin-bottom: 15px;" th:text="${mensagemErro}"></div>
+        <tr th:if="${tipo == 'motorista' and motoristas.empty}">
+		    <td colspan="4">Nenhum motorista com status "Disponível" encontrado.</td>
+		</tr>
+		<tr th:if="${tipo == 'veiculo' and veiculos.empty}">
+		    <td colspan="4">Nenhum veículo com status "Operacional" encontrado.</td>
+		</tr>
+
+        <table>
+            <thead>
+                <tr>
+                    <th th:text="${tipo == 'motorista' ? 'Nome' : 'Placa'}"></th>
+                    <th th:text="${tipo == 'motorista' ? 'CNH' : 'Modelo'}"></th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${tipo == 'motorista' and motoristas.empty}">
+                    <td colspan="4">Nenhum motorista encontrado.</td>
+                </tr>
+                <tr th:if="${tipo == 'veiculo' and veiculos.empty}">
+                    <td colspan="4">Nenhum veículo encontrado.</td>
+                </tr>
+                
+                <tr th:each="item : ${tipo == 'motorista' ? motoristas : veiculos}">
+                    <td th:text="${tipo == 'motorista' ? item.name : item.plateNumber}"></td>
+                    <td th:text="${tipo == 'motorista' ? item.licenseNumber : item.model}"></td>
+                    <td th:text="${item.status}"></td>
+                    <td>
+                        <a th:href="@{/entrega/selecionar/{tipo}/{id}(tipo=${tipo}, id=${item.id})}"
+                           class="btn">Selecionar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Paginação -->
+        <div style="margin-top: 20px; text-align: center;" 
+             th:if="${tipo == 'motorista' ? !motoristas.empty : !veiculos.empty}">
+            <a th:if="${paginaAtual > 1}"
+               th:href="@{/entrega/selecionar/{tipo}(tipo=${tipo}, pagina=${paginaAtual - 1}, tamanho=${tamanhoPagina})}"
+               class="btn" style="margin-right: 10px;">← Anterior</a>
+            
+            <span>Página <span th:text="${paginaAtual}"></span></span>
+            
+            <a th:if="${temProximaPagina}"
+               th:href="@{/entrega/selecionar/{tipo}(tipo=${tipo}, pagina=${paginaAtual + 1}, tamanho=${tamanhoPagina})}"
+               class="btn" style="margin-left: 10px;">Próxima →</a>
+        </div>
+    </div>
+</body>
+</html>

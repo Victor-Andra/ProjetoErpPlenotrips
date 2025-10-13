@@ -1,0 +1,351 @@
+/* ===============
+   RESET BÁSICO
+   =============== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===============
+   NAVBAR
+   =============== */
+.navbar {
+    background: #2c3e50;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+.navbar-brand {
+    color: white;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px 20px;
+}
+.main-nav {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.main-nav > li {
+    position: relative;
+}
+.main-nav > li > a {
+    color: #ecf0f1;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: block;
+    transition: background 0.2s;
+}
+.main-nav > li > a:hover {
+    background: #34495e;
+}
+.submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    z-index: 1000;
+    display: none;
+    list-style: none;
+}
+.main-nav > li:hover .submenu {
+    display: block;
+}
+.submenu > li {
+    position: relative;
+}
+.submenu > li > a {
+    color: #2c3e50;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.2s;
+}
+.submenu > li > a:hover {
+    background: #f8f9fa;
+}
+.sub-submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 4px;
+    z-index: 1001;
+    display: none;
+    list-style: none;
+    margin-top: -12px;
+}
+.submenu > li:hover .sub-submenu,
+.sub-submenu:hover {
+    display: block;
+}
+.sub-submenu a {
+    color: #2c3e50;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.2s;
+}
+.sub-submenu a:hover {
+    background: #e9ecef;
+}
+
+/* ===============
+   LAYOUT GERAL
+   =============== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+}
+
+/* ===============
+   TABELAS
+   =============== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border-radius: 6px;
+    overflow: hidden;
+}
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+th {
+    background: #f8f9fa;
+    color: #495057;
+    font-weight: bold;
+}
+tr:hover td {
+    background: #f9f9f9;
+}
+
+/* ===============
+   BOTÕES
+   =============== */
+.btn {
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background 0.2s;
+    display: inline-block;
+    text-align: center;
+}
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+.btn-primary:hover {
+    background: #0069d9;
+}
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+.btn-secondary:hover {
+    background: #5a6268;
+}
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+.btn-success:hover {
+    background: #218838;
+}
+.btn-editar {
+    background: #17a2b8;
+    color: white;
+    padding: 6px 10px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    text-decoration: none;
+}
+.btn-editar:hover {
+    background: #138496;
+}
+.btn-excluir {
+    background: #dc3545;
+    color: white;
+    padding: 6px 10px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    text-decoration: none;
+}
+.btn-excluir:hover {
+    background: #c82333;
+}
+.btn-search {
+    background: #17a2b8;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+.btn-search:hover {
+    background: #138496;
+}
+
+/* ===============
+   FORMULÁRIOS
+   =============== */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    max-width: 600px;
+    margin: 30px auto;
+}
+.form-group {
+    margin-bottom: 18px;
+}
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+.campo-obrigatorio::after {
+    content: " *";
+    color: #dc3545;
+}
+.uuid-info, .json-info {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+.input-with-button {
+    display: flex;
+    gap: 10px;
+}
+.input-with-button input {
+    flex: 1;
+}
+
+/* ===============
+   MENSAGENS
+   =============== */
+.erro {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.sucesso {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* ===============
+   PAGINAÇÃO
+   =============== */
+.paginacao {
+    margin-top: 20px;
+    text-align: center;
+}
+.paginacao a {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 0 4px;
+    text-decoration: none;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+}
+.paginacao a:hover {
+    background: #0056b3;
+}
+
+/* ===============
+   RESPONSIVO - NAVBAR
+   =============== */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-wrap: wrap;
+    }
+    .main-nav {
+        width: 100%;
+        flex-direction: column;
+    }
+    .submenu, .sub-submenu {
+        position: static;
+        box-shadow: none;
+        background: #34495e;
+        margin-left: 20px;
+    }
+    .submenu a, .sub-submenu a {
+        color: white;
+    }
+    .submenu a:hover, .sub-submenu a:hover {
+        background: #3d566e;
+    }
+    .sub-submenu {
+        margin-left: 40px;
+    }
+    
+    /* Ajustes para telas pequenas */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .btn-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .btn-group .btn {
+        width: 100%;
+        margin: 0;
+    }
+}

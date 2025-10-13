@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motoristas - PlenoTrip ERP</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<div class="container">
+	<div th:replace="~{fragmento/navbar}"></div>
+    <div class="header">
+        <h1>Motoristas</h1>
+        <a href="/motorista/novo" class="btn">+ Novo Motorista</a>
+    </div>
+
+    <!-- Mensagem de sucesso -->
+    <div th:if="${mensagemSucesso}" class="sucesso" th:text="${mensagemSucesso}"></div>
+
+    <!-- Mensagem de erro -->
+    <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+    <!-- Tabela de motoristas -->
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CNH</th>
+                <th>Status</th>
+                <th>Criado em</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${motoristas != null and motoristas.empty}">
+                <td colspan="5" style="text-align: center; color: #6c757d;">Nenhum motorista cadastrado.</td>
+            </tr>
+            <tr th:each="motorista : ${motoristas}">
+                <td th:text="${motorista.name}"></td>
+                <td th:text="${motorista.licenseNumber}"></td>
+                <td th:text="${motorista.status}"></td>
+                <td th:text="${#dates.format(motorista.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td class="acoes">
+                    <a th:href="@{/motorista/editar/{id}(id=${motorista.id})}" class="btn-editar">Editar</a>
+                    <a th:href="@{/motorista/excluir/{id}(id=${motorista.id})}"
+                       class="btn-excluir"
+                       onclick="return confirm('Tem certeza que deseja excluir este motorista?')">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Paginação -->
+    <div class="paginacao" th:if="${motoristas != null and !motoristas.empty}">
+        <a th:if="${paginaAtual > 1}"
+           th:href="@{/motorista(pagina=${paginaAtual - 1}, tamanho=${tamanhoPagina})}">← Anterior</a>
+
+        <span th:text="'Página ' + ${paginaAtual}"></span>
+
+        <a th:if="${temProximaPagina}"
+           th:href="@{/motorista(pagina=${paginaAtual + 1}, tamanho=${tamanhoPagina})}">Próxima →</a>
+    </div>
+</div>
+
+</body>
+</html>

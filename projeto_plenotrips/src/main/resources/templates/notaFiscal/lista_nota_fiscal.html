@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas Fiscais - PlenoTrip ERP</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<div class="container">
+	<div th:replace="~{fragmento/navbar}"></div>
+    <div class="header">
+        <h1>Notas Fiscais</h1>
+        <a href="/notas_fiscais/novo" class="btn">+ Nova Nota Fiscal</a>
+    </div>
+
+    <!-- Mensagem de sucesso -->
+    <div th:if="${mensagemSucesso}" class="sucesso" th:text="${mensagemSucesso}"></div>
+
+    <!-- Mensagem de erro -->
+    <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+    <!-- Tabela de notas fiscais -->
+    <table>
+        <thead>
+            <tr>
+                <th>Número da Nota</th>
+                <th>ID Atribuição</th>
+                <th>Criado em</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${notasFiscais != null and notasFiscais.empty}">
+                <td colspan="4" style="text-align: center; color: #6c757d;">Nenhuma nota fiscal cadastrada.</td>
+            </tr>
+            <tr th:each="notaFiscal : ${notasFiscais}">
+                <td th:text="${notaFiscal.invoiceNumber}"></td>
+                <td th:text="${notaFiscal.deliveryAssignmentId}"></td>
+                <td th:text="${#dates.format(notaFiscal.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td class="acoes">
+                    <a th:href="@{/nota_fiscal/editar/{id}(id=${notaFiscal.id})}" class="btn-editar">Editar</a>
+                    <a th:href="@{/nota_fiscal/excluir/{id}(id=${notaFiscal.id})}"
+                       class="btn-excluir"
+                       onclick="return confirm('Tem certeza que deseja excluir esta nota fiscal?')">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Paginação -->
+    <div class="paginacao" th:if="${notasFiscais != null and !notasFiscais.empty}">
+        <a th:if="${paginaAtual > 1}"
+           th:href="@{/nota_fiscal(pagina=${paginaAtual - 1}, tamanho=${tamanhoPagina})}">← Anterior</a>
+
+        <span th:text="'Página ' + ${paginaAtual}"></span>
+
+        <a th:if="${temProximaPagina}"
+           th:href="@{/nota_fiscal(pagina=${paginaAtual + 1}, tamanho=${tamanhoPagina})}">Próxima →</a>
+    </div>
+</div>
+
+</body>
+</html>

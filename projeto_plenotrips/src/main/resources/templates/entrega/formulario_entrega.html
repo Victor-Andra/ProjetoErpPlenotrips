@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Atribuição</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+    <!-- ✅ CORREÇÃO: Adicionado th:inline="javascript" -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pré-preenche com dados do servidor
+            const motorista = /*[[${motoristaSelecionado}]]*/ null;
+            const veiculo = /*[[${veiculoSelecionado}]]*/ null;
+
+            if (motorista) {
+                document.getElementById('driverName').value = motorista.name;
+                document.getElementById('driverId').value = motorista.id;
+            }
+
+            if (veiculo) {
+                document.getElementById('vehiclePlate').value = veiculo.plateNumber;
+                document.getElementById('vehicleId').value = veiculo.id;
+            }
+
+            // Lógica de notas fiscais
+            const container = document.getElementById('containerNotas');
+            const btnAdd = document.getElementById('btnAddNota');
+
+            function criarCampoNota(index) {
+                const div = document.createElement('div');
+                div.className = 'nota-fiscal-item';
+                div.style.display = 'flex';
+                div.style.gap = '10px';
+                div.style.marginBottom = '10px';
+                div.style.alignItems = 'center';
+
+                div.innerHTML = `
+                    <input type="text" 
+                           name="invoiceKeys[${index}]" 
+                           placeholder="Chave de acesso (44 dígitos)" 
+                           maxlength="44" 
+                           required 
+                           style="flex: 1; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <button type="button" class="btn btn-excluir" onclick="this.parentElement.remove()">×</button>
+                `;
+                return div;
+            }
+
+            container.appendChild(criarCampoNota(0));
+            let contador = 1;
+            btnAdd.addEventListener('click', function() {
+                container.appendChild(criarCampoNota(contador++));
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div th:replace="~{fragmento/navbar}"></div>
+
+    <div class="container">
+        <div class="form-card">
+            <h2>Cadastrar Nova Atribuição</h2>
+
+            <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+            <form id="formAtribuicao" method="post" th:action="@{/entrega}">
+                <!-- Campo Motorista -->
+                <div class="form-group">
+                    <label for="driverName" class="campo-obrigatorio">Motorista</label>
+                    <div class="input-with-button">
+                        <input type="text" 
+                               id="driverName" 
+                               value="" 
+                               placeholder="Clique em 'Pesquisar' para selecionar"
+                               readonly
+                               required />
+                        <input type="hidden" id="driverId" name="driverId" required />
+                        <a href="/entrega/selecionar/motorista?returnUrl=/entrega/novo" class="btn-search">
+                            Pesquisar
+                        </a>
+                    </div>
+                    <div class="uuid-info">Apenas motoristas com status "Disponível"</div>
+                </div>
+                
+                <!-- Campo Veículo -->
+                <div class="form-group">
+                    <label for="vehiclePlate" class="campo-obrigatorio">Veículo</label>
+                    <div class="input-with-button">
+                        <input type="text" id="vehiclePlate" name="vehiclePlate" value="" placeholder="Clique em 'Pesquisar' para selecionar" readonly required />
+                        <input type="hidden" id="vehicleId" name="vehicleId" required />
+                        <a href="/entrega/selecionar/veiculo?returnUrl=/entrega/novo" class="btn-search">
+                            Pesquisar
+                        </a>
+                    </div>
+                    <div class="uuid-info">Apenas veículos com status "Operacional"</div>
+                </div>
+
+                <!-- Descrição da Rota -->
+                <div class="form-group">
+                    <label for="routeDescription" class="campo-obrigatorio">Descrição da Rota</label>
+                    <textarea id="routeDescription" name="routeDescription" rows="4" required></textarea>
+                </div>
+
+                <!-- Notas Fiscais -->
+                <div class="form-group">
+                    <label class="campo-obrigatorio">Notas Fiscais</label>
+                    <button type="button" id="btnAddNota" class="btn btn-success" style="margin-bottom: 10px;">
+                        + Adicionar Nota Fiscal
+                    </button>
+                    <div id="containerNotas">
+                        <!-- Notas são adicionadas aqui dinamicamente -->
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Cadastrar Atribuição</button>
+                    <a href="/entrega" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

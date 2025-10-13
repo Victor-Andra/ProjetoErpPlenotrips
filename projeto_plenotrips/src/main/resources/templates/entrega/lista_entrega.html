@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atribuições de Entrega - PlenoTrip ERP</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<div class="container">
+	<div th:replace="~{fragmento/navbar}"></div>
+    <div class="header">
+        <h1>Atribuições de Entrega</h1>
+        <a href="/entrega/novo" class="btn">+ Nova Atribuição</a>
+    </div>
+
+    <!-- Mensagem de sucesso -->
+    <div th:if="${mensagemSucesso}" class="sucesso" th:text="${mensagemSucesso}"></div>
+
+    <!-- Mensagem de erro -->
+    <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+    <!-- Tabela de atribuições -->
+    <table>
+	    <thead>
+	        <tr>
+	            <th>ID</th>
+	            <th>Descrição da Rota</th>
+	            <th>Motorista</th>
+	            <th>Veículo</th>
+	            <th>Status</th>
+	            <th>Criado em</th>
+	            <th>Ações</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        <tr th:if="${entregas != null and entregas.empty}">
+	            <td colspan="7" style="text-align: center; color: #6c757d;">Nenhuma atribuição de entrega cadastrada.</td>
+	        </tr>
+	        <tr th:each="entrega : ${entregas}">
+	            <td th:text="${entrega.id}"></td>
+	            <td th:text="${entrega.routeDescription}"></td>
+	            <td th:text="${entrega.driverName != null ? entrega.driverName : '-'}"></td>
+	            <td th:text="${entrega.vehiclePlate != null ? entrega.vehiclePlate : '-'}"></td>
+	            <td th:text="${entrega.status}"></td>
+	            <td th:text="${#dates.format(entrega.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+	            <td class="acoes">
+	                <a th:href="@{/entrega/editar/{id}(id=${entrega.id})}" class="btn-editar">Editar</a>
+	                <a th:href="@{/entrega/excluir/{id}(id=${entrega.id})}"
+	                   class="btn-excluir"
+	                   onclick="return confirm('Tem certeza que deseja excluir esta atribuição de entrega?')">Excluir</a>
+	            </td>
+	        </tr>
+	    </tbody>
+	</table>
+
+    <!-- Paginação -->
+    <div class="paginacao" th:if="${entregas != null and !entregas.empty}">
+        <a th:if="${paginaAtual > 1}"
+           th:href="@{/entrega(pagina=${paginaAtual - 1}, tamanho=${tamanhoPagina})}">← Anterior</a>
+
+        <span th:text="'Página ' + ${paginaAtual}"></span>
+
+        <a th:if="${temProximaPagina}"
+           th:href="@{/entrega(pagina=${paginaAtual + 1}, tamanho=${tamanhoPagina})}">Próxima →</a>
+    </div>
+</div>
+
+</body>
+</html>

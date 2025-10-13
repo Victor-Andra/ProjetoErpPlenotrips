@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${modoEdicao} ? 'Editar Nota Fiscal' : 'Cadastrar Nota Fiscal'">Nota Fiscal</title>
+    <link rel="stylesheet" th:href="@{/css/geral.css}">
+</head>
+<body>
+
+<div class="container">
+	<div th:replace="~{fragmento/navbar}"></div>
+    <div class="form-card">
+        <h2 th:text="${modoEdicao} ? 'Editar Nota Fiscal' : 'Cadastrar Nova Nota Fiscal'">Nota Fiscal</h2>
+
+        <!-- Mensagem de erro -->
+        <div th:if="${mensagemErro}" class="erro" th:text="${mensagemErro}"></div>
+
+        <!-- Formulário -->
+        <form th:object="${notaFiscal}" 
+              th:action="${modoEdicao} ? @{/nota_fiscal/atualizar} : @{/notas_fiscais}" 
+              method="post">
+
+            <!-- Campo oculto para ID (necessário na edição) -->
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+                <label for="deliveryAssignmentId" class="campo-obrigatorio">ID da Atribuição de Entrega</label>
+                <input type="text" 
+                       id="deliveryAssignmentId" 
+                       th:field="*{deliveryAssignmentId}" 
+                       placeholder="Ex: 123e4567-e89b-12d3-a456-426614174000"
+                       required />
+                <div class="json-info">UUID da atribuição de entrega associada</div>
+            </div>
+
+            <div class="form-group">
+                <label for="invoiceNumber" class="campo-obrigatorio">Número da Nota Fiscal</label>
+                <input type="text" 
+                       id="invoiceNumber" 
+                       th:field="*{invoiceNumber}" 
+                       maxlength="255" 
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label for="invoiceDetails">Detalhes da Nota Fiscal (JSON)</label>
+                <textarea id="invoiceDetails" 
+                          th:field="*{invoiceDetails}" 
+                          rows="6"
+                          placeholder='{"cliente": "Empresa XYZ", "valor": 1500.00, "itens": 3}'> 
+                </textarea>
+                <div class="json-info">Formato JSON válido. Deixe vazio para {}.</div>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">
+                    <span th:text="${modoEdicao} ? 'Atualizar' : 'Cadastrar'">Salvar</span>
+                </button>
+                <a href="/nota_fiscal" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
