@@ -1,4 +1,3 @@
-// handlers/assignment_handler.go
 package handlers
 
 import (
@@ -8,6 +7,21 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
+
+// Notify godoc
+// @Summary Notifica nova atribuição de entrega
+// @Description Cria uma nova atribuição após validar motorista, veículo e notas fiscais
+// @Tags assignments
+// @Accept json
+// @Produce json
+// @Param request body models.AssignmentRequest true "Dados da atribuição"
+// @Success 202 {object} map[string]string "Atribuição criada com sucesso"
+// @Failure 400 {object} map[string]string "JSON malformado"
+// @Failure 401 {object} map[string]string "Token JWT inválido"
+// @Failure 422 {object} map[string]string "Validação de negócio falhou"
+// @Failure 500 {object} map[string]string "Erro interno do servidor"
+// @Router /v1/assignments/notify [post]
+// @Security BearerAuth
 
 type AssignmentHandler struct {
 	service *services.AssignmentService

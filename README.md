@@ -25,8 +25,9 @@ go get -u github.com/swaggo/gin-swagger/swaggerFiles
 Uma vez que todas dependências estiverem importadas podemos executar o arquivo docker.
 
 docker-compose up --build
-Se tudo der certo aparecerá no log 
-"✅ Conexão com banco estabelecida com sucesso!"
+
+Após isso aparecerá no log 
+"✅ Projeto iniciado na porta 8081!"
 }
 
 projeto_plenotrips

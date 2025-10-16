@@ -127,115 +127,9 @@ public class EntregaBO {
         }
     }
     
-    
-/*
-    // Método auxiliar para buscar faturas por atribuição
-    private List<NotaFiscal> buscarFaturasPorAtribuicao(UUID assignmentId) throws ExcecaoRegraNegocio {
-        try (NotaFiscalDAO dao = new NotaFiscalDAO()) {
-            return dao.listarPorAtribuicao(assignmentId);
-        } catch (SQLException e) {
-            throw new ExcecaoRegraNegocio("Erro ao buscar faturas: " + e.getMessage());
-        }
-    }
-
-    // Método auxiliar para extrair chave de acesso do JSON
-    private String extrairChaveAcesso(String invoiceDetails) {
-        if (invoiceDetails == null || invoiceDetails.trim().isEmpty()) {
-            return null;
-        }
-        
-        try {
-            // Usa Jackson para parsear o JSON
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readTree(invoiceDetails);
-            
-            // Ajuste o caminho conforme sua estrutura JSON
-            // Ex: {"chave_acesso": "12345678901234567890123456789012345678901234"}
-            if (node.has("chave_acesso")) {
-                return node.get("chave_acesso").asText();
-            }
-            if (node.has("key")) {
-                return node.get("key").asText();
-            }
-            // Se o JSON for apenas a chave como string pura
-            if (node.isTextual()) {
-                String text = node.asText();
-                return text.length() == 44 ? text : null;
-            }
-        } catch (Exception e) {
-            System.err.println("Erro ao parsear invoiceDetails: " + e.getMessage());
-        }
-        return null;
-    }
-    */
-    /*
-    @PostMapping
-    public String cadastrarAtribuicao(@ModelAttribute DadosAtribuicao dados, Model model) {
-        try {
-            // Validações básicas
-            if (dados.getDriverId() == null || dados.getVehiclePlate() == null || 
-                dados.getRouteDescription() == null || dados.getInvoiceKeys() == null) {
-                throw new ExcecaoRegraNegocio("Dados incompletos");
-            }
-
-            // Monta o payload para a API Go
-            NotificacaoGO payload = new NotificacaoGO();
-            payload.setDriverId(dados.getDriverId());
-            payload.setVehiclePlate(dados.getVehiclePlate());
-            payload.setRouteDescription(dados.getRouteDescription());
-            
-            // Processa as chaves de NF-e
-            List<NotificacaoGO.InvoiceItem> invoices = new ArrayList<>();
-            for (String chave : dados.getInvoiceKeys()) {
-                if (chave != null && chave.trim().length() == 44) {
-                    NotificacaoGO.InvoiceItem item = new NotificacaoGO.InvoiceItem();
-                    item.setKey(chave.trim());
-                    invoices.add(item);
-                }
-            }
-            payload.setInvoices(invoices);
-
-            // Gera token JWT
-            String token = JwtUtil.gerarToken();
-
-            // Envia para a API Go
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(token); // ← Inclui o token no header
-            
-            HttpEntity<NotificacaoGO> request = new HttpEntity<>(payload, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                "http://localhost:8081/v1/assignments/notify", 
-                request, 
-                String.class
-            );
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return "redirect:/entrega?sucesso=Atribuição criada com sucesso!";
-            } else {
-                throw new RuntimeException("API retornou: " + response.getStatusCode());
-            }
-
-        } catch (ExcecaoRegraNegocio e) {
-            model.addAttribute("mensagemErro", "Erro: " + e.getMessage());
-        } catch (Exception e) {
-            model.addAttribute("mensagemErro", "Falha na API: " + e.getMessage());
-        }
-        System.out.println("PASSA POR AQUI PRA INICIAR");
-        // Reexibe o formulário com os dados preenchidos
-        model.addAttribute("driverId", dados.getDriverId());
-        model.addAttribute("vehiclePlate", dados.getVehiclePlate());
-        model.addAttribute("routeDescription", dados.getRouteDescription());
-        model.addAttribute("invoiceKeys", dados.getInvoiceKeys());
-        return "entrega/formulario_entrega";
-    }
-    */
-    
     public void cadastrarAtribuicao(DadosAtribuicao dados) throws ExcecaoRegraNegocio {
         try {
             // Monta o payload
-        	System.out.println("START:");
             NotificacaoGO payload = new NotificacaoGO();
             payload.setDriverId(dados.getDriverId());
             payload.setVehiclePlate(dados.getVehiclePlate());
@@ -262,7 +156,6 @@ public class EntregaBO {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(token);
             
-            System.out.println("Enviando atribuição para API Go: " + payload.getRouteDescription());
             HttpEntity<NotificacaoGO> request = new HttpEntity<>(payload, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(
                 "http://localhost:8081/v1/assignments/notify", 

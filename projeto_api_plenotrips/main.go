@@ -10,7 +10,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
 )
 
 // @title PlenoTrip ERP Webhook API
@@ -30,7 +29,6 @@ func main() {
 		log.Fatal("Erro ao conectar ao banco: ", err)
 	}
 	defer db.Close()
-	log.Println("✅ Conexão com banco estabelecida com sucesso!")
 
 	// Serviços e handlers
 	assignmentService := services.NewAssignmentService(db)
@@ -38,12 +36,21 @@ func main() {
 
 	r := gin.Default()
 
+	// ✅ Servir Swagger UI estático
+	//r.Static("/swagger", "./swagger")
+	r.Static("/swagger", "./docs/swagger")
+	r.StaticFile("/swagger/openapi.yaml", "./docs/openapi.yaml")
+
+	// ✅ Servir sua especificação OpenAPI
+	r.Static("/docs", "./docs")
+
 	api := r.Group("/v1/assignments")
 	api.Use(authMiddleware())
 	{
 		api.POST("/notify", assignmentHandler.Notify)
 	}
 
+	log.Println("✅ Projeto iniciado na porta 8081!")
 	r.Run(":8081")
 }
 

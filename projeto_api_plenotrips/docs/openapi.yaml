@@ -1,118 +1,58 @@
 openapi: 3.0.3
 info:
-  title: PlenoTrip ERP Webhook API
-  description: |
-    Serviço para notificação de novas atribuições de entrega.
-    Valida token JWT, verifica disponibilidade de motorista/veículo e persiste dados atomicamente.
-  version: 1.0.0
-  contact:
-    name: PlenoTrip Team
-    email: suporte@plenotrip.com
-
-servers:
-  - url: http://localhost:8081
-    description: Ambiente de desenvolvimento
-
+  title: API de Assignments
+  description: Endpoint para notificação de atribuições de motoristas
+  version: "1.0.0"
 paths:
   /v1/assignments/notify:
     post:
-      summary: Notifica nova atribuição de entrega
-      description: |
-        Cria uma nova atribuição de entrega após validar:
-        - Motorista com status AVAILABLE
-        - Veículo com status OPERATIONAL
-        - Notas fiscais com chave de 44 dígitos e modelo 55
+      summary: Notifica uma atribuição de motorista
+      description: Recebe informações de atribuição e processa a notificação.
       operationId: notifyAssignment
+      tags:
+        - assignments
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AssignmentRequest'
+              type: object
+              required:
+                - driver_id
+                - route
+              properties:
+                driver_id:
+                  type: string
+                  description: ID do motorista
+                route:
+                  type: string
+                  description: Descrição da rota
       responses:
         '202':
-          description: Atribuição criada com sucesso
+          description: Requisição aceita e processada
+        '400':
+          description: Dados inválidos
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: string
                   message:
                     type: string
-                    example: "Atribuição criada com sucesso"
-        '400':
-          description: JSON malformado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '401':
-          description: Token JWT inválido ou ausente
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Não autorizado
         '422':
-          description: Validação de negócio falhou
+          description: Entidade não processável (motorista não encontrado)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
         '500':
           description: Erro interno do servidor
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      security:
-        - BearerAuth: []
-
-components:
-  schemas:
-    AssignmentRequest:
-      type: object
-      required:
-        - driverId
-        - vehiclePlate
-        - routeDescription
-        - invoices
-      properties:
-        driverId:
-          type: string
-          format: uuid
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        vehiclePlate:
-          type: string
-          example: "ABC1234"
-        routeDescription:
-          type: string
-          example: "Entrega de produtos frágeis na região central."
-        invoices:
-          type: array
-          items:
-            $ref: '#/components/schemas/InvoiceItem'
-          minItems: 1
-
-    InvoiceItem:
-      type: object
-      required:
-        - key
-      properties:
-        key:
-          type: string
-          pattern: '^\d{44}$'
-          example: "552311123456780001005500100000000123456789"
-
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT

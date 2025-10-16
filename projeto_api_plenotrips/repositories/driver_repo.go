@@ -16,7 +16,7 @@ func NewDriverRepository(db *sql.DB) *DriverRepository {
 }
 
 func (r *DriverRepository) FindByID(id uuid.UUID) (*models.Driver, error) {
-	row := r.db.QueryRow("SELECT id, status FROM drivers WHERE id = $1", id)
+	row := r.db.QueryRow("SELECT id, status FROM drivers WHERE id = nullif($1, '')::uuid", id.String())
 	var driver models.Driver
 	err := row.Scan(&driver.ID, &driver.Status)
 	if err == sql.ErrNoRows {

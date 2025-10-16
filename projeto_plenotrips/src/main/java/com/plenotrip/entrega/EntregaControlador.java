@@ -68,26 +68,12 @@ public class EntregaControlador {
                 motoristasDisponiveis.isEmpty() ? null : motoristasDisponiveis.get(0));
             model.addAttribute("veiculoSelecionado", 
                 veiculosOperacionais.isEmpty() ? null : veiculosOperacionais.get(0));
-            System.out.println("motoristasDisponiveis.get(0): "+motoristasDisponiveis.get(0).getName());
-            System.out.println("veiculosOperacionais.get(0): "+veiculosOperacionais.get(0).getPlateNumber());
         } catch (ExcecaoRegraNegocio e) {
             model.addAttribute("mensagemErro", "Erro ao carregar dados iniciais: " + e.getMessage());
         }
         return "entrega/formulario_entrega";
     }
-/*
-    @PostMapping
-    public String cadastrarEntrega(@ModelAttribute Entrega entrega, Model model) {
-        try {
-            entregaBO.salvar(entrega);
-            return "redirect:/entrega?sucesso=Atribuicao de entrega cadastrada com sucesso!";
-        } catch (ExcecaoRegraNegocio e) {
-            model.addAttribute("mensagemErro", e.getMessage());
-            model.addAttribute("modoEdicao", false);
-            return "entrega/formulario_entrega";
-        }
-    }
-*/
+
     @GetMapping("/editar/{id}")
     public String exibirFormularioEdicao(@PathVariable String id, Model model) {
         try {
@@ -116,19 +102,7 @@ public class EntregaControlador {
         }
         return "entrega/formulario_entrega";
     }
-/*
-    @PostMapping("/atualizar")
-    public String atualizarEntrega(@ModelAttribute Entrega entrega, Model model) {
-        try {
-            entregaBO.atualizar(entrega);
-            return "redirect:/entrega?sucesso=Atribuicao de entrega atualizada com sucesso!";
-        } catch (ExcecaoRegraNegocio e) {
-            model.addAttribute("mensagemErro", e.getMessage());
-            model.addAttribute("modoEdicao", true);
-            return "entrega/formulario_entrega";
-        }
-    }
-*/
+
     @GetMapping("/excluir/{id}")
     public String excluirEntrega(@PathVariable String id, Model model) {
         try {
